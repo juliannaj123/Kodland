@@ -1,0 +1,11 @@
+body {
+    font-family: Inter,  sans-serif; /* Rodzina czcionek */
+    font-size: 30px; /* Rozmiar głównej czcionki w <p></p> tag  */
+    background-color: #d6319f; /* Kolor tła strony internetowej */
+    color: #ffffff; /* Kolor tła strony internetowej*/ 
+}
+h1 {
+    color: #54acff; /* Kolor nagłówka */
+    font-size: 40px; /* Rozmiar czcionki nagłówka */
+    font-family: Banschrift, serif; /* Rodzina czcionek używana w nagłówku */
+}
