@@ -1,37 +1,45 @@
-import discord
-import random
-from discord.ext import commands
-from bot_logic import rpsc, random_number
+# Import
+from flask import Flask, render_template
 
-intents = discord.Intents.default()
-intents.message_content = True
 
-bot = commands.Bot(command_prefix='&', intents=intents)
+app = Flask(__name__)
 
-@bot.event
-async def on_ready():
-    print(f'Zalogowaliśmy się jako {bot.user}')
+def result_calculate(size, lights, device):
+# Zmienne umożliwiające obliczenie poboru energii przez urządzenia
+    home_coef = 100
+    light_coef = 0.04
+    devices_coef = 5   
+    return size * home_coef + lights * light_coef + device * devices_coef 
 
-@bot.command()
-async def greet(ctx):
-    await ctx.send(f'Cześć, jestem bot{bot.user}!')
+# Pierwsza strona
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-@bot.command()
-async def repeat(ctx, count_repeat = 5):
-    n= " "
-    await ctx.send(n= input('Jakie słowo powtórzyć?'))
-    await ctx.send(x * count_repeat)
+# Druga strona
+@app.route('/<size>')
+def lights(size):
+    return render_template(
+                            'lights.html', 
+                            size=size
+                           )
 
-@bot.command()
-async def goodbye(ctx):
-    await ctx.send(f'Do widzenia!')
+# Trzecia strona
+@app.route('/<size>/<lights>')
+def electronics(size, lights):
+    return render_template(
+                            'electronics.html',
+                            size = size, 
+                            lights = lights                           
+                           )
 
-@bot.command()
-async def rockpaperscissors(ctx):
-    await ctx.send(rpsc())
-
-@bot.command()
-async def randomnumber(ctx):
-    await ctx.send(random_number())
-
-bot.run("MTIwOTE4Njg5NjAxODkzOTkxNg.GlE_px.xw-0raYOX82np_pwzSkb7536EudhRbROZ-zFI8")
+# Obliczenia
+@app.route('/<size>/<lights>/<device>')
+def end(size, lights, device):
+    return render_template('end.html', 
+                            result=result_calculate(int(size),
+                                                    int(lights), 
+                                                    int(device)
+                                                    )
+                        )
+app.run(debug=True)
